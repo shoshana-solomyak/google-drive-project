@@ -5,7 +5,7 @@ function HomePage() {
   const user = params.username;
 
   useEffect(() => {
-    fetch(`http://localhost:3000/${user}`)
+    fetch(`http://localhost:3007/${user}`)
       .then((res) => res.json())
       .then((res) => {
         console.log("res:", res);
