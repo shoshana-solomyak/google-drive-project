@@ -17,7 +17,7 @@ function HomePage() {
       headers: { "Content-Type": "application/json" },
     };
     fetch(
-      `http://localhost:3007/${user}/${currItem.itemName}?isFolder=${currItem.isFolder}`,
+      `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`,
       requestOptions
     )
       .then((response) => {
@@ -76,9 +76,14 @@ function HomePage() {
       ) : (
         items.map((item) => {
           return item.isDir ? (
-            <Folder key={item.name} item={item} setInFolder={setInFolder} />
+            <Folder
+              key={item.name}
+              item={item}
+              setInFolder={setInFolder}
+              handleDelete={handleDelete}
+            />
           ) : (
-            <File key={item.name} item={item} />
+            <File key={item.name} item={item} handleDelete={handleDelete} />
           );
         })
       )}
