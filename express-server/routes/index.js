@@ -62,26 +62,4 @@ router.post("/users", function (req, res, next) {
   }
 });
 
-router.post("/users", function (req, res, next) {
-  let input = req.body.inputs;
-  console.log("input: ", input);
-  console.log("users: ", users);
-  const user = users.find((u) => {
-    console.log(
-      "u.password.toString() == input.password: ",
-      u.password.toString() == input.password
-    );
-    return u.name === input.username && u.password.toString() == input.password;
-  });
-
-  console.log("user: ", user);
-  if (user) {
-    console.log("user: ", user);
-
-    res.status(200).send(user).end();
-  } else {
-    res.status(400).send("incorrect username or password").end();
-  }
-});
-
 module.exports = router;
