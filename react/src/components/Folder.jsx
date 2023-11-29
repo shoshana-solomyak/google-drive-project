@@ -1,8 +1,9 @@
-function Folder() {
+function Folder({ item }) {
   return (
     <>
-      <div>
-        <span>folder</span>
+      <div className="item" style={{ backgroundColor: "red" }}>
+        {item.name}
+
         <button>view</button>
         <button>open</button>
         <button>🗑️</button>

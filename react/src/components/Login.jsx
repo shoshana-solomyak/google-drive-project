@@ -43,7 +43,6 @@ function Login() {
       .then((res) => {
         if (!res.ok) {
           throw new Error("incorrect username or password");
-          // navigate(`/${res.user}`);
         } else {
           console.log("yay");
         }
@@ -51,8 +50,9 @@ function Login() {
 
         return res.json();
       })
-      .then((res) => {
-        console.log(res);
+      .then((data) => {
+        console.log(data);
+        navigate(`/${data.name}`);
       })
       .catch((error) => console.log("Error fetching users:", error));
   }
