@@ -1,19 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 function HomePage() {
-  const [hi, setHi] = useState("");
-  let user;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/hi");
-        const data = await response.json();
-        setHi(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const params = useParams();
+  const user = params.username;
 
-    fetchData();
+  useEffect(() => {
+    fetch(`http://localhost:3000/${user}`)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("res:", res);
+      });
   }, []);
 
   console.log("user : ", user);
