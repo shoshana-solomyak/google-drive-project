@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:username", function (req, res, next) {
-  
+  const user = req.params.username;
   res.send(req.params.username);
 });
 
