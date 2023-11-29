@@ -7,6 +7,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:username", function (req, res, next) {
+  
   res.send(req.params.username);
 });
 
