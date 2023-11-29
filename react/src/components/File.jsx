@@ -1,9 +1,13 @@
-function File() {
+function File({ item }) {
   return (
     <>
-      <div>file</div>
-      <button>🗑️</button>
-      <button>✏️</button>
+      {" "}
+      <div className="item" style={{ backgroundColor: "blue" }}>
+        {item.name}
+
+        <button>🗑️</button>
+        <button>✏️</button>
+      </div>
     </>
   );
 }
