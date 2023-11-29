@@ -40,6 +40,11 @@ router.get("/:username", function (req, res, next) {
   });
 });
 
+router.get("/:username/:filepath", (req, res, next) => {
+  const filepath = `public/files/${req.params.username}/${req.params.filepath}`;
+  res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
+});
+
 router.post("/users", function (req, res, next) {
   let input = req.body.inputs;
   console.log("input: ", input);

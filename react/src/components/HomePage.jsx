@@ -5,7 +5,7 @@ function HomePage() {
   const user = params.username;
 
   useEffect(() => {
-    fetch(`http://localhost:3007/${user}`)
+    fetch(`http://localhost:3000/${user}`)
       .then((res) => res.json())
       .then((res) => {
         console.log("res:", res);
@@ -13,7 +13,8 @@ function HomePage() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [user]);
+
   return <div>{user}</div>;
 }
 export default HomePage;
