@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 function Folder({ item, setInFolder }) {
   const navigate = useNavigate();
-  const username = JSON.parse(localStorage.getItem("currentUser")).name;
   return (
     <>
       <div className="item" style={{ backgroundColor: "red" }}>
@@ -13,7 +12,7 @@ function Folder({ item, setInFolder }) {
         <button
           onClick={() => {
             setInFolder(true);
-            navigate(`/${username}/${item.name}`);
+            navigate(`./folder/${item.name}`);
           }}
         >
           open

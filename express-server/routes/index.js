@@ -13,6 +13,9 @@ function getDirectory(res, pathname) {
   fs.readdir(pathname, (err, data) => {
     if (err) return res.status(404).send(`user not found`).end();
 
+    if (data.length === 0) {
+      return res.send(JSON.stringify(data)).end();
+    }
     let answer = [];
     data.map((name) => {
       fs.stat(path.join(pathname, name), (err, stat) => {

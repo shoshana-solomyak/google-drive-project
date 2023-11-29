@@ -43,14 +43,17 @@ function HomePage() {
       ) : (
         <h3>{username}</h3>
       )}
-      <h3></h3>
-      {items.map((item) => {
-        return item.isDir ? (
-          <Folder key={item.name} item={item} setInFolder={setInFolder} />
-        ) : (
-          <File key={item.name} item={item} />
-        );
-      })}
+      {items.length === 0 ? (
+        <h3>This folder is empty</h3>
+      ) : (
+        items.map((item) => {
+          return item.isDir ? (
+            <Folder key={item.name} item={item} setInFolder={setInFolder} />
+          ) : (
+            <File key={item.name} item={item} />
+          );
+        })
+      )}
       {inFolder ? <button onClick={handleBack}>back</button> : null}
     </div>
   );
