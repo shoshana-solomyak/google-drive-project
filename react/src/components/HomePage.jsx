@@ -9,10 +9,11 @@ function HomePage() {
       .then((res) => res.json())
       .then((res) => {
         console.log("res:", res);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
-
-  console.log("user : ", user);
   return <div>{user}</div>;
 }
 export default HomePage;
