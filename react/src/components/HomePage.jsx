@@ -11,6 +11,34 @@ function HomePage() {
   const [items, setItems] = useState([]);
   const [inFolder, setInFolder] = useState(foldername);
 
+  function handleDelete(currItem) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch(
+      `http://localhost:3007/${user}/${currItem.itemName}?isFolder=${currItem.isFolder}`,
+      requestOptions
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to delete item");
+        }
+      })
+      .then(() => {
+        setItems((prevItems) =>
+          prevItems.filter((item) => item.name !== currItem.itemName)
+        );
+        console.log("deleted");
+      })
+
+      .catch((error) => {
+        console.error("Error deleting item:", error);
+      });
+  }
+
   useEffect(() => {
     let fetchUrl;
     if (inFolder) {

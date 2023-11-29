@@ -4,9 +4,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const users = [
-  { name: "talya", password: 123456 },
-  { name: "shoshana", password: 123456 },
-  { name: "Bret", password: "hildegard.org" },
+  { id: 1, name: "talya", password: 123456 },
+  { id: 2, name: "shoshana", password: 123456 },
+  { id: 3, name: "Bret", password: "hildegard.org" },
 ];
 
 function getDirectory(res, pathname) {
@@ -85,6 +85,32 @@ router.post("/users", function (req, res, next) {
     res.status(200).send(user).end();
   } else {
     res.status(400).send("incorrect username or password").end();
+  }
+});
+router.delete("/:username/:item", function (req, res, next) {
+  const { username, item } = req.params;
+  const isFolder = req.query.isFolder === "true";
+  const filePath = `./public/files/${username}/${item}`;
+  console.log("filePath: ", filePath);
+  if (!isFolder) {
+    fs.rm(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to delete item." });
+      } else {
+        res.status(200).json({ message: "Item deleted successfully." });
+      }
+    });
+  } else {
+    fs.rmdir(filePath, (err) => {
+      console.log("filePath: ", filePath);
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to delete item." });
+      } else {
+        res.status(200).json({ message: "Item deleted successfully." });
+      }
+    });
   }
 });
 
