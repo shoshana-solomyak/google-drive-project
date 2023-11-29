@@ -7,8 +7,36 @@ function HomePage() {
   const user = params.username;
   const [items, setItems] = useState([]);
 
+  function handleDelete(currItem) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch(
+      `http://localhost:3007/${user}/${currItem.itemName}?isFolder=${currItem.isFolder}`,
+      requestOptions
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to delete item");
+        }
+      })
+      .then(() => {
+        setItems((prevItems) =>
+          prevItems.filter((item) => item.name !== currItem.itemName)
+        );
+        console.log("deleted");
+      })
+
+      .catch((error) => {
+        console.error("Error deleting item:", error);
+      });
+  }
+
   useEffect(() => {
-    fetch(`http://localhost:3000/${user}`)
+    fetch(`http://localhost:3007/${user}`)
       .then((res) => res.json())
       .then((res) => {
         console.log("res:", res);
@@ -23,9 +51,9 @@ function HomePage() {
     <div>
       {items.map((item) => {
         return item.isDir ? (
-          <Folder key={item.name} item={item} />
+          <Folder key={item.id} item={item} handleDelete={handleDelete} />
         ) : (
-          <File key={item.name} item={item} />
+          <File key={item.id} item={item} handleDelete={handleDelete} />
         );
       })}
     </div>
