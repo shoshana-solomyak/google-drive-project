@@ -1,20 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 function HomePage() {
+  const [hi, setHi] = useState("");
   let user;
   useEffect(() => {
-    func();
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/hi");
+        const data = await response.json();
+        setHi(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const func = async () => {
-    fetch("http://localhost:3000/hi")
-      .then((res) => res.json())
-      .then((res) => {
-        user = res;
-        console.log("res:", res);
-      });
-  };
-
   console.log("user : ", user);
-  return <div>{user}</div>;
+  return <div>{hi}</div>;
 }
 export default HomePage;

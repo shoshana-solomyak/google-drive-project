@@ -12,7 +12,3 @@ router.get("/:username", function (req, res, next) {
 });
 
 module.exports = router;
-//   \_(o - o)_/
-//jkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjk
-//l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.l.
-//jujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujujuj
