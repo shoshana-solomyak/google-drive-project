@@ -9,25 +9,26 @@ const users = [
   { name: "Bret", password: "hildegard.org" },
 ];
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
-
-router.get("/:username", function (req, res, next) {
-  const username = req.params.username;
-  const userpath = `./public/files/${username}`;
-  fs.readdir(userpath, (err, data) => {
-    if (err) return res.status(404).send(`${username} not found`).end();
+function getDirectory(res, pathname) {
+  fs.readdir(pathname, (err, data) => {
+    if (err) return res.status(404).send(`user not found`).end();
 
     let answer = [];
     data.map((name) => {
-      fs.stat(path.join(userpath, name), (err, stat) => {
+      fs.stat(path.join(pathname, name), (err, stat) => {
         if (err) return res.status(404).send(`${name} stat went wrong`).end();
         if (stat.isDirectory()) {
-          answer.push({ isDir: true, size: stat.size });
+          answer.push({
+            isDir: true,
+            size: stat.size,
+            birthday: stat.birthtime,
+          });
         } else {
-          answer.push({ isDir: false, size: stat.size });
+          answer.push({
+            isDir: false,
+            size: stat.size,
+            birthday: stat.birthtime,
+          });
         }
         if (answer.length === data.length) {
           for (let i in data) {
@@ -38,9 +39,26 @@ router.get("/:username", function (req, res, next) {
       });
     });
   });
+}
+
+/* GET home page. */
+router.get("/", function (req, res, next) {
+  res.render("index", { title: "Express" });
 });
 
-router.get("/:username/:filepath", (req, res, next) => {
+router.get("/:username", function (req, res, next) {
+  const username = req.params.username;
+  const userpath = `./public/files/${username}`;
+
+  getDirectory(res, userpath);
+});
+
+router.get("/:username/:foldername", (req, res, next) => {
+  const pathname = `./public/files/${req.params.username}/${req.params.foldername}`;
+  getDirectory(res, pathname);
+});
+
+router.get("/:username/content/:filepath", (req, res, next) => {
   const filepath = `public/files/${req.params.username}/${req.params.filepath}`;
   res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
 });

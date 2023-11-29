@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [inputs, setInputs] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  let userId;
   const navigate = useNavigate();
   function handleChange(e) {
     const { name, value } = e.target;
@@ -46,15 +45,16 @@ function Login() {
         } else {
           console.log("yay");
         }
-        console.log("res: ", res);
-
         return res.json();
       })
       .then((data) => {
+        localStorage.setItem("currentUser", JSON.stringify(data));
         console.log(data);
         navigate(`/${data.name}`);
       })
-      .catch((error) => console.log("Error fetching users:", error));
+      .catch((error) => {
+        console.log("Error fetching users:", error);
+      });
   }
   return (
     <>

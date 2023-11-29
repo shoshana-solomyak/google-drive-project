@@ -2,32 +2,56 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Folder from "./Folder";
 import File from "./File";
+import { useNavigate } from "react-router-dom";
 function HomePage() {
   const params = useParams();
-  const user = params.username;
+  const navigate = useNavigate();
+  const username = params.username;
+  const foldername = params.foldername;
   const [items, setItems] = useState([]);
+  const [inFolder, setInFolder] = useState(foldername);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/${user}`)
+    let fetchUrl;
+    if (inFolder) {
+      fetchUrl = `http://localhost:3007/${username}/${foldername}`;
+    } else {
+      fetchUrl = `http://localhost:3007/${username}`;
+    }
+    fetch(fetchUrl)
       .then((res) => res.json())
       .then((res) => {
         console.log("res:", res);
-        setItems((prev) => [...prev, ...res]);
-        console.log("items after setting:", items);
+        setItems(res);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [user]);
+  }, [username, inFolder, foldername]);
+
+  function handleBack() {
+    setInFolder(false);
+    navigate(`/${username}`);
+  }
+
   return (
     <div>
+      {inFolder ? (
+        <h3>
+          {username} &#8594; {foldername}
+        </h3>
+      ) : (
+        <h3>{username}</h3>
+      )}
+      <h3></h3>
       {items.map((item) => {
         return item.isDir ? (
-          <Folder key={item.name} item={item} />
+          <Folder key={item.name} item={item} setInFolder={setInFolder} />
         ) : (
           <File key={item.name} item={item} />
         );
       })}
+      {inFolder ? <button onClick={handleBack}>back</button> : null}
     </div>
   );
 }
