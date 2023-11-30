@@ -136,7 +136,7 @@ function HomePage() {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("Failed to delete item");
+          throw new Error("the folder isnt empty");
         }
       })
       .then(() => {
@@ -146,7 +146,7 @@ function HomePage() {
         console.log("deleted");
       })
       .catch((error) => {
-        console.error("Error deleting item:", error);
+        alert("Error deleting item:", error.message);
       });
   }
 

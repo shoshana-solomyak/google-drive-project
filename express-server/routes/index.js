@@ -1,4 +1,5 @@
 var express = require("express");
+const { error } = require("node:console");
 var router = express.Router();
 const fs = require("node:fs");
 const path = require("node:path");
@@ -145,6 +146,8 @@ router.delete("/:username/:item", function (req, res, next) {
       if (err) {
         console.error(err);
         res.status(500).json({ message: "Failed to delete item." });
+        res.send(error);
+        console.log("error: ", error);
       } else {
         res.status(200).json({ message: "Item deleted successfully." });
       }
