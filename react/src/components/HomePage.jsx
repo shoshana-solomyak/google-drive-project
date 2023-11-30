@@ -43,34 +43,30 @@ function HomePage() {
 
   function handleSetCopy(file) {
     setCopyInProgress(file);
-    setMoveInProgress(file);
+    setMoveInProgress(null);
   }
 
   function handleSetMove(file) {
     setMoveInProgress(file);
-    setCopyInProgress(file);
+    setCopyInProgress(null);
   }
 
-  function handleMoveOrCopy(folder) {
-    let url;
-    if (copyInProgress) {
-      url = `http://localhost:3007/${username}/${copyInProgress.name}/${folder.name}`;
-    } else {
-      url = `http://localhost:3007/${username}/${moveInProgress.name}/${folder.name}`;
-    }
-
+  function handleCopy(folder) {
     try {
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        `http://localhost:3007/${username}/${copyInProgress.name}/${folder.name}?action=copy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((res) => {
           if (!res.ok) {
             if (res.status === 400) {
-              setCopyInProgress(null);
               alert("file already exists");
+              setCopyInProgress(null);
             }
             throw new Error(
               `could not copy ${copyInProgress.name} into ${folder.name}`
@@ -80,8 +76,8 @@ function HomePage() {
         })
         .then((res) => {
           console.log(res);
-          setCopyInProgress(null);
           alert("copied succesfully");
+          setCopyInProgress(null);
         })
         .catch((err) => {
           console.log(err);
@@ -90,35 +86,43 @@ function HomePage() {
       console.log(err);
     }
   }
-  let renameUrl;
-  function submitNewName(itemToChange, newName) {
-    console.log("newName: ", newName);
-    if (inFolder) {
-      renameUrl = `http://localhost:3007/${username}/${foldername}/${itemToChange}`;
-    } else {
-      renameUrl = `http://localhost:3007/${username}/${itemToChange}`;
-    }
 
-    fetch(renameUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: newName }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to update name");
-        }
-        setItems((prevItems) =>
-          prevItems.map((item) =>
-            item.name === itemToChange ? { ...item, name: newName } : item
-          )
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating name:", error);
-      });
+  function handleMove(folder) {
+    console.log("folder: ", folder);
+
+    // try {
+    //   fetch(
+    //     `http://localhost:3007/${username}/${copyInProgress.name}/${folder.name}?action=move`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   )
+    //     .then((res) => {
+    //       if (!res.ok) {
+    //         if (res.status === 400) {
+    //           alert("file already exists");
+    //           setCopyInProgress(null);
+    //         }
+    //         throw new Error(
+    //           `could not copy ${copyInProgress.name} into ${folder.name}`
+    //         );
+    //       }
+    //       return res.text();
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //       alert("copied succesfully");
+    //       setCopyInProgress(null);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   function handleDelete(currItem) {
@@ -177,32 +181,29 @@ function HomePage() {
           {items.length === 0 ? (
             <h3>This folder is empty</h3>
           ) : (
-            <div id="flexContainer">
-              {items.map((item) => {
-                return item.isDir ? (
-                  <Folder
-                    key={item.name}
-                    item={item}
-                    setInFolder={setInFolder}
-                    handleDelete={handleDelete}
-                    copyInProgress={copyInProgress}
-                    moveInProgress={moveInProgress}
-                    handleMoveOrCopy={() => handleMoveOrCopy(item)}
-                    submitNewName={submitNewName}
-                  />
-                ) : (
-                  <File
-                    key={item.name}
-                    item={item}
-                    handleDelete={handleDelete}
-                    inFolder={inFolder}
-                    handleCopy={() => handleSetCopy(item)}
-                    handleMove={() => handleSetMove(item)}
-                    submitNewName={submitNewName}
-                  />
-                );
-              })}
-            </div>
+            items.map((item) => {
+              return item.isDir ? (
+                <Folder
+                  key={item.name}
+                  item={item}
+                  setInFolder={setInFolder}
+                  handleDelete={handleDelete}
+                  copyInProgress={copyInProgress}
+                  moveInProgress={moveInProgress}
+                  handleCopy={() => handleCopy(item)}
+                  handleMove={() => handleMove(item)}
+                />
+              ) : (
+                <File
+                  key={item.name}
+                  item={item}
+                  handleDelete={handleDelete}
+                  inFolder={inFolder}
+                  handleCopy={() => handleSetCopy(item)}
+                  handleMove={() => handleSetMove(item)}
+                />
+              );
+            })
           )}
           <button onClick={handleLogout}> Logout</button>
         </div>

@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function File({
-  item,
-  handleDelete,
-  handleCopy,
-  handleMove,
-
-  submitNewName,
-}) {
+function File({ item, handleDelete, handleCopy, handleMove, submitNewName }) {
   const navigate = useNavigate();
   const splitName = item.name.split(".");
   const [showInfo, setShowInfo] = useState(false);

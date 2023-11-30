@@ -99,6 +99,8 @@ router.post("/users", function (req, res, next) {
 });
 
 router.post("/:username/:file/:destination", (req, res, next) => {
+  const action = req.query.action;
+
   console.log("in copy server");
   const source = req.params.file;
   const destination = req.params.destination;
