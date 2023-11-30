@@ -219,6 +219,13 @@ function HomePage() {
         <ErrorPage message={error} />
       ) : (
         <div>
+          <button
+            onClick={handleLogout}
+            style={{ position: "fixed", right: "3%" }}
+          >
+            {" "}
+            Logout
+          </button>
           {inFolder ? (
             <h3>
               {username} &#8594; {foldername}
@@ -258,7 +265,6 @@ function HomePage() {
               })}
             </div>
           )}
-          <button onClick={handleLogout}> Logout</button>
         </div>
       )}
     </>
