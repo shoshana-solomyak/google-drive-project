@@ -6,6 +6,11 @@ function Folder({ item, setInFolder, handleDelete }) {
   const params = useParams();
   const username = params.username;
   const [view, setView] = useState([]);
+  const [showInfo, setShowInfo] = useState(false);
+
+  function handleInfo() {
+    setShowInfo((info) => !info);
+  }
 
   function handleView() {
     fetch(`http://localhost:3007/${username}/${item.name}`)
@@ -28,7 +33,7 @@ function Folder({ item, setInFolder, handleDelete }) {
     <div key={item.id} className="item" style={{ backgroundColor: "red" }}>
       {item.name}
 
-      <button>info</button>
+      <button onClick={handleInfo}>info</button>
       <button onClick={handleView}>view</button>
       <ul>
         {view.map((item, index) => (
@@ -49,6 +54,11 @@ function Folder({ item, setInFolder, handleDelete }) {
         🗑️
       </button>
       <button>✏️</button>
+      {showInfo ? (
+        <span>
+          size: {item.size}, birthday: {item.birthday}
+        </span>
+      ) : null}
     </div>
   );
 }
