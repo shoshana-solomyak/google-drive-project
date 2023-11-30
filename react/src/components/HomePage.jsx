@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Folder from "./Folder";
 import File from "./File";
 import { useNavigate } from "react-router-dom";
+import Error from "./Error";
 function HomePage() {
   const params = useParams();
   const navigate = useNavigate();
@@ -10,8 +11,85 @@ function HomePage() {
   const foldername = params.foldername;
   const [items, setItems] = useState([]);
   const [inFolder, setInFolder] = useState(foldername);
-
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const [error, setError] = useState(null);
+  const [copyInProgress, setCopyInProgress] = useState(null);
+  const [moveInProgress, setMoveInProgress] = useState(null);
   let deleteUrl;
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    } else if (user.name !== params.username) {
+      setError("users do not match");
+    }
+
+    let fetchUrl;
+    if (inFolder) {
+      fetchUrl = `http://localhost:3007/${username}/${foldername}`;
+    } else {
+      fetchUrl = `http://localhost:3007/${username}`;
+    }
+    fetch(fetchUrl)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("res:", res);
+        setItems(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [username, inFolder, foldername]);
+
+  function handleSetCopy(file) {
+    setCopyInProgress(file);
+    setMoveInProgress(file);
+  }
+
+  function handleSetMove(file) {
+    setMoveInProgress(file);
+    setCopyInProgress(file);
+  }
+
+  function handleMoveOrCopy(folder) {
+    let url;
+    if (copyInProgress) {
+      url = `http://localhost:3007/${username}/${copyInProgress.name}/${folder.name}`;
+    } else {
+      url = `http://localhost:3007/${username}/${moveInProgress.name}/${folder.name}`;
+    }
+
+    try {
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 400) {
+              setCopyInProgress(null);
+              alert("file already exists");
+            }
+            throw new Error(
+              `could not copy ${copyInProgress.name} into ${folder.name}`
+            );
+          }
+          return res.text();
+        })
+        .then((res) => {
+          console.log(res);
+          setCopyInProgress(null);
+          alert("copied succesfully");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   function handleDelete(currItem) {
     if (inFolder) {
@@ -37,67 +115,65 @@ function HomePage() {
         );
         console.log("deleted");
       })
-
       .catch((error) => {
         console.error("Error deleting item:", error);
       });
   }
-
-  useEffect(() => {
-    let fetchUrl;
-    if (inFolder) {
-      fetchUrl = `http://localhost:3007/${username}/${foldername}`;
-    } else {
-      fetchUrl = `http://localhost:3007/${username}`;
-    }
-    fetch(fetchUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("res:", res);
-        setItems(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [username, inFolder, foldername]);
 
   function handleBack() {
     setInFolder(false);
     navigate(`/${username}`);
   }
 
+  function handleLogout() {
+    localStorage.removeItem("currentUser");
+    navigate("/");
+  }
+
   return (
-    <div>
-      {inFolder ? (
-        <h3>
-          {username} &#8594; {foldername}
-        </h3>
+    <>
+      {error ? (
+        <Error message={error} />
       ) : (
-        <h3>{username}</h3>
-      )}
-      {items.length === 0 ? (
-        <h3>This folder is empty</h3>
-      ) : (
-        items.map((item) => {
-          return item.isDir ? (
-            <Folder
-              key={item.name}
-              item={item}
-              setInFolder={setInFolder}
-              handleDelete={handleDelete}
-            />
+        <div>
+          {inFolder ? (
+            <h3>
+              {username} &#8594; {foldername}
+            </h3>
           ) : (
-            <File
-              key={item.name}
-              item={item}
-              handleDelete={handleDelete}
-              inFolder={inFolder}
-            />
-          );
-        })
+            <h3>{username}</h3>
+          )}
+          {inFolder ? <button onClick={handleBack}>up</button> : null}
+          {items.length === 0 ? (
+            <h3>This folder is empty</h3>
+          ) : (
+            items.map((item) => {
+              return item.isDir ? (
+                <Folder
+                  key={item.name}
+                  item={item}
+                  setInFolder={setInFolder}
+                  handleDelete={handleDelete}
+                  copyInProgress={copyInProgress}
+                  moveInProgress={moveInProgress}
+                  handleMoveOrCopy={() => handleMoveOrCopy(item)}
+                />
+              ) : (
+                <File
+                  key={item.name}
+                  item={item}
+                  handleDelete={handleDelete}
+                  inFolder={inFolder}
+                  handleCopy={() => handleSetCopy(item)}
+                  handleMove={() => handleSetMove(item)}
+                />
+              );
+            })
+          )}
+          <button onClick={handleLogout}> Logout</button>
+        </div>
       )}
-      {inFolder ? <button onClick={handleBack}>back</button> : null}
-    </div>
+    </>
   );
 }
 export default HomePage;

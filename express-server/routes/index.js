@@ -80,8 +80,6 @@ router.get("/:username/:foldername/content/:filepath", (req, res, next) => {
 
 router.post("/users", function (req, res, next) {
   let input = req.body.inputs;
-  console.log("input: ", input);
-  console.log("users: ", users);
   const user = users.find((u) => {
     console.log(
       "u.password.toString() == input.password: ",
@@ -99,6 +97,34 @@ router.post("/users", function (req, res, next) {
     res.status(400).send("incorrect username or password").end();
   }
 });
+
+router.post("/:username/:file/:destination", (req, res, next) => {
+  console.log("in copy server");
+  const source = req.params.file;
+  const destination = req.params.destination;
+  const filepath = `./public/files/${req.params.username}/${source}`;
+  const destinationpath = `./public/files/${req.params.username}/${destination}/${source}`;
+
+  if (!fs.existsSync(destinationpath)) {
+    fs.copyFile(filepath, destinationpath, (err) => {
+      if (err) {
+        console.log(
+          `something went wrong trying to copy ${source} into ${destination}`
+        );
+        return res
+          .status(404)
+          .send(
+            `something went wrong trying to copy ${source} into ${destination}`
+          );
+      }
+      res.send("file copied succesfully");
+    });
+  } else {
+    console.log(`${source} already exists in ${destination}`);
+    res.status(400).send(`${source} already exists in ${destination}`);
+  }
+});
+
 router.delete("/:username/:item", function (req, res, next) {
   const { username, item } = req.params;
   const isFolder = req.query.isFolder === "true";

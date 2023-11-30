@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function File({ item, handleDelete }) {
+function File({ item, handleDelete, handleCopy, handleMove }) {
   const navigate = useNavigate();
   const splitName = item.name.split(".");
   const [showInfo, setShowInfo] = useState(false);
@@ -26,6 +26,8 @@ function File({ item, handleDelete }) {
         🗑️
       </button>
       <button>✏️</button>
+      <button onClick={handleCopy}>copy</button>
+      <button onClick={handleMove}>move</button>
       {showInfo ? (
         <span>
           size: {item.size}, birthday: {item.birthday}
