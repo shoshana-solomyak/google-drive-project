@@ -39,8 +39,6 @@ function File({
         🗑️
       </button>
       <button onClick={() => handleRename(item.name)}>✏️</button>
-      <button onClick={handleCopy}>copy</button>
-      <button onClick={handleMove}>move</button>
       {showRename && (
         <>
           <input
@@ -58,6 +56,9 @@ function File({
           </button>
         </>
       )}
+      <button onClick={handleCopy}>copy</button>
+      <button onClick={handleMove}>move</button>
+
       {showInfo ? (
         <span>
           size: {item.size}, birthday: {item.birthday}

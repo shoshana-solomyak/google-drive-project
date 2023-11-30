@@ -82,9 +82,6 @@ function Folder({
         🗑️
       </button>
       <button onClick={() => handleRename(item.name)}>✏️</button>
-      {copyInProgress || moveInProgress ? (
-        <button onClick={handleMoveOrCopy}>select</button>
-      ) : null}
       {showRename && (
         <>
           <input
@@ -102,6 +99,9 @@ function Folder({
           </button>
         </>
       )}
+      {copyInProgress || moveInProgress ? (
+        <button onClick={handleMoveOrCopy}>select</button>
+      ) : null}
     </div>
   );
 }
