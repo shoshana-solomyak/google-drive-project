@@ -6,12 +6,12 @@ function File({ item, handleDelete }) {
   const splitName = item.name.split(".");
   const [showInfo, setShowInfo] = useState(false);
 
-  function openFile() {
-    navigate(`./file/${splitName[0]}?type=${splitName[1]}`);
-  }
-
   function handleInfo() {
     setShowInfo((info) => !info);
+  }
+
+  function openFile() {
+    navigate(`./file/${splitName[0]}?type=${splitName[1]}`);
   }
 
   return (
