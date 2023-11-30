@@ -15,7 +15,7 @@ function App() {
             <Route path=":username/folder/:foldername" element={<HomePage />} />
             <Route path=":username/file/:filename" element={<FilePage />} />
             <Route
-              path=":username/:foldername/:filename"
+              path=":username/folder/:foldername/file/:filename"
               element={<FilePage />}
             />
           </Route>

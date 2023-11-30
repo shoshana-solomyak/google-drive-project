@@ -87,7 +87,12 @@ function HomePage() {
               handleDelete={handleDelete}
             />
           ) : (
-            <File key={item.name} item={item} handleDelete={handleDelete} />
+            <File
+              key={item.name}
+              item={item}
+              handleDelete={handleDelete}
+              inFolder={inFolder}
+            />
           );
         })
       )}

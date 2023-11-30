@@ -62,9 +62,16 @@ router.get("/:username/:foldername", (req, res, next) => {
 });
 
 router.get("/:username/content/:filepath", (req, res, next) => {
+  console.log("in server");
   const filepath = `public/files/${req.params.username}/${req.params.filepath}`;
   res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
 });
+router.get("/:username/:foldername/content/:filepath", (req, res, next) => {
+  console.log("in server");
+  const filepath = `public/files/${req.params.username}/${req.params.foldername}/${req.params.filepath}`;
+  res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
+});
+
 router.get("/:username/:foldername/content/:filepath", (req, res, next) => {
   console.log("in server");
   const filepath = `public/files/${req.params.username}/${req.params.foldername}/${req.params.filepath}`;
