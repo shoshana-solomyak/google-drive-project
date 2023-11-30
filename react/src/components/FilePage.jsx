@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Error from "./Error";
 
 function FilePage() {
   const params = useParams();
   const [content, setContent] = useState("...");
   const searchParams = new URLSearchParams(document.location.search);
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!user) {
+      navigate("/");
+    } else if (user.name !== params.username) {
+      setError("users do not match");
+    }
+
     const fileName = `${params.filename}.${searchParams.get("type")}`;
     const href = window.location.href;
     let url;
@@ -29,8 +39,16 @@ function FilePage() {
       console.log(err);
     }
   }, []);
-  // return <>{content}</>;
-  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  return (
+    <>
+      {error ? (
+        <Error message={error} />
+      ) : (
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+      )}
+      ;
+    </>
+  );
 }
 
 export default FilePage;

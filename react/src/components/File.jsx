@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 function File({
   item,
   handleDelete,
+  handleCopy,
+  handleMove,
 
   submitNewName,
 }) {
@@ -37,6 +39,8 @@ function File({
         🗑️
       </button>
       <button onClick={() => handleRename(item.name)}>✏️</button>
+      <button onClick={handleCopy}>copy</button>
+      <button onClick={handleMove}>move</button>
       {showRename && (
         <>
           <input

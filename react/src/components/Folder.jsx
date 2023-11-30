@@ -1,7 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 
-function Folder({ item, setInFolder, handleDelete, submitNewName }) {
+function Folder({
+  item,
+  setInFolder,
+  handleDelete,
+  submitNewName,
+  copyInProgress,
+  handleMoveOrCopy,
+  moveInProgress,
+}) {
   const navigate = useNavigate();
   const params = useParams();
   const username = params.username;
@@ -74,6 +82,9 @@ function Folder({ item, setInFolder, handleDelete, submitNewName }) {
         🗑️
       </button>
       <button onClick={() => handleRename(item.name)}>✏️</button>
+      {copyInProgress || moveInProgress ? (
+        <button onClick={handleMoveOrCopy}>select</button>
+      ) : null}
       {showRename && (
         <>
           <input
