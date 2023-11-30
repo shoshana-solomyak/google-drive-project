@@ -29,7 +29,8 @@ function FilePage() {
       console.log(err);
     }
   }, []);
-  return <>{content}</>;
+  // return <>{content}</>;
+  return <div dangerouslySetInnerHTML={{ __html: content }} />;
 }
 
 export default FilePage;
