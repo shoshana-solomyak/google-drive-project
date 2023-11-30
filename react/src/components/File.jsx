@@ -17,7 +17,9 @@ function File({ item, handleDelete, handleCopy, handleMove, submitNewName }) {
   }
 
   function openFile() {
-    navigate(`./file/${splitName[0]}?type=${splitName[1]}`);
+    navigate(`./file/${splitName[0]}?type=${splitName[1]}`, {
+      target: "_blank",
+    });
   }
 
   return (

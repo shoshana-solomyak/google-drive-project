@@ -46,7 +46,6 @@ function FilePage() {
       ) : (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       )}
-      ;
     </>
   );
 }
