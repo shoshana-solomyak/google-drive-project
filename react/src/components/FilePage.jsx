@@ -4,13 +4,14 @@ import ErrorPage from "./ErrorPage";
 
 function FilePage() {
   const params = useParams();
-  const [content, setContent] = useState("...");
-  const searchParams = new URLSearchParams(document.location.search);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const searchParams = new URLSearchParams(document.location.search);
+  const [content, setContent] = useState("...");
   const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
+    //check if correct user is logged in
     if (!user) {
       navigate("/");
     } else if (user.name !== params.username) {
@@ -29,10 +30,14 @@ function FilePage() {
     try {
       fetch(url)
         .then((res) => {
+          if (!res.ok) {
+            setError("failed to open file");
+            return;
+          }
           return res.text();
         })
         .then((res) => {
-          setContent(res);
+          if (res) setContent(res);
         })
         .catch((err) => console.log(err));
     } catch (err) {
@@ -46,7 +51,6 @@ function FilePage() {
       ) : (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       )}
-      ;
     </>
   );
 }

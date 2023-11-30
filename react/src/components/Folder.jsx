@@ -7,8 +7,9 @@ function Folder({
   handleDelete,
   submitNewName,
   copyInProgress,
-  handleMoveOrCopy,
+  handleCopy,
   moveInProgress,
+  handleMove,
 }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -99,9 +100,8 @@ function Folder({
           </button>
         </>
       )}
-      {copyInProgress || moveInProgress ? (
-        <button onClick={handleMoveOrCopy}>select</button>
-      ) : null}
+      {copyInProgress ? <button onClick={handleCopy}>select</button> : null}
+      {moveInProgress ? <button onClick={handleMove}>select</button> : null}
     </div>
   );
 }

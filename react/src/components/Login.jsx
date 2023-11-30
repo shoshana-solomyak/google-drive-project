@@ -5,10 +5,14 @@ function Login() {
   const [inputs, setInputs] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  localStorage.removeItem("currentUser");
+
   function handleChange(e) {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
   }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!inputs.username || !inputs.password) {
@@ -22,9 +26,9 @@ function Login() {
       },
       body: JSON.stringify({ inputs }),
     })
-      // .then(() => console.log("inputs: ", inputs))
       .then((res) => {
         if (!res.ok) {
+          setErrorMessage("incorrect username or password");
           throw new Error("incorrect username or password");
         } else {
           console.log("yay");

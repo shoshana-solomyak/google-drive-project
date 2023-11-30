@@ -99,7 +99,7 @@ router.post("/users", function (req, res, next) {
   }
 });
 
-router.post("/:username/:file/:destination", (req, res, next) => {
+router.post("/:username/copy/:file/:destination", (req, res, next) => {
   console.log("in copy server");
   const source = req.params.file;
   const destination = req.params.destination;
@@ -123,6 +123,26 @@ router.post("/:username/:file/:destination", (req, res, next) => {
   } else {
     console.log(`${source} already exists in ${destination}`);
     res.status(400).send(`${source} already exists in ${destination}`);
+  }
+});
+
+router.post("/:username/move/:file/:destination", (req, res, next) => {
+  const source = req.params.file;
+  const destination = req.params.destination;
+  const filepath = `./public/files/${req.params.username}/${source}`;
+  const destinationpath = `./public/files/${req.params.username}/${destination}/${source}`;
+  if (!fs.existsSync(destinationpath)) {
+    fs.rename(filepath, destinationpath, (err) => {
+      if (err) {
+        console.error("Error moving file:", err);
+        res.status(500).send("Error moving file");
+        return;
+      }
+      console.log("File moved successfully!");
+      res.status(200).send("File moved successfully");
+    });
+  } else {
+    res.status(400).send("file already exists");
   }
 });
 
@@ -164,6 +184,7 @@ router.delete("/:username/:item", function (req, res, next) {
     });
   }
 });
+
 router.delete("/:username/:foldername/:item", function (req, res, next) {
   const { username, item, foldername } = req.params;
   const isFolder = req.query.isFolder === "true";

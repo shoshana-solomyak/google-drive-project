@@ -4,6 +4,7 @@ import Folder from "./Folder";
 import File from "./File";
 import { useNavigate } from "react-router-dom";
 import ErrorPage from "./ErrorPage";
+
 function HomePage() {
   const params = useParams();
   const navigate = useNavigate();
@@ -11,12 +12,14 @@ function HomePage() {
   const foldername = params.foldername;
   const [items, setItems] = useState([]);
   const [inFolder, setInFolder] = useState(foldername);
-  const user = JSON.parse(localStorage.getItem("currentUser"));
   const [error, setError] = useState(null);
   const [copyInProgress, setCopyInProgress] = useState(null);
   const [moveInProgress, setMoveInProgress] = useState(null);
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  let deleteUrl;
 
   useEffect(() => {
+    //check if correct user is logged in
     if (!user) {
       navigate("/");
     } else if (user.name !== params.username) {
@@ -29,69 +32,114 @@ function HomePage() {
     } else {
       fetchUrl = `http://localhost:3007/${username}`;
     }
+
     fetch(fetchUrl)
-      .then((res) => res.json())
       .then((res) => {
-        console.log("res:", res);
+        if (!res.ok) {
+          setError("failed to fetch files");
+        }
+        return res.json();
+      })
+      .then((res) => {
         setItems(res);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(() => setError("failed to fetch files"));
   }, [username, inFolder, foldername]);
 
   function handleSetCopy(file) {
     setCopyInProgress(file);
-    setMoveInProgress(file);
+    setMoveInProgress(null);
   }
 
   function handleSetMove(file) {
     setMoveInProgress(file);
-    setCopyInProgress(file);
+    setCopyInProgress(null);
   }
 
-  function handleMoveOrCopy(folder) {
-    let url;
-    if (copyInProgress) {
-      url = `http://localhost:3007/${username}/${copyInProgress.name}/${folder.name}`;
-    } else {
-      url = `http://localhost:3007/${username}/${moveInProgress.name}/${folder.name}`;
-    }
-
+  function handleCopy(folder) {
     try {
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        `http://localhost:3007/${username}/copy/${copyInProgress.name}/${folder.name}?action=copy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((res) => {
           if (!res.ok) {
             if (res.status === 400) {
-              setCopyInProgress(null);
               alert("file already exists");
+            } else {
+              alert("failed to copy file");
+              throw new Error(
+                `could not copy ${copyInProgress.name} into ${folder.name}`
+              );
             }
-            throw new Error(
-              `could not copy ${copyInProgress.name} into ${folder.name}`
-            );
+            return;
+          } else {
+            return res.text();
           }
-          return res.text();
         })
         .then((res) => {
-          console.log(res);
-          setCopyInProgress(null);
-          alert("copied succesfully");
+          if (res) alert("copied succesfully");
         })
         .catch((err) => {
           console.log(err);
         });
     } catch (err) {
       console.log(err);
+    } finally {
+      setCopyInProgress(null);
     }
   }
+
+  function handleMove(folder) {
+    try {
+      fetch(
+        `http://localhost:3007/${username}/move/${moveInProgress.name}/${folder.name}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 400) {
+              alert("file already exists");
+            } else {
+              alert("failed to move file");
+              throw new Error(
+                `could not move ${moveInProgress.name} into ${folder.name}`
+              );
+            }
+            return;
+          } else {
+            return res.text();
+          }
+        })
+        .then((res) => {
+          if (res) {
+            setItems((prev) =>
+              prev.filter((item) => item.name !== moveInProgress.name)
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setMoveInProgress(null);
+    }
+  }
+
   let renameUrl;
   function submitNewName(itemToChange, newName) {
-    console.log("newName: ", newName);
     if (inFolder) {
       renameUrl = `http://localhost:3007/${username}/${foldername}/${itemToChange}`;
     } else {
@@ -107,6 +155,7 @@ function HomePage() {
     })
       .then((res) => {
         if (!res.ok) {
+          alert("failed to rename");
           throw new Error("Failed to update name");
         }
         setItems((prevItems) =>
@@ -181,7 +230,6 @@ function HomePage() {
         setItems((prevItems) =>
           prevItems.filter((item) => item.name !== currItem.itemName)
         );
-        console.log("deleted");
       })
       .catch((error) => {
         console.error("Error deleting item:", error);
@@ -227,7 +275,8 @@ function HomePage() {
                     handleDelete={handleDelete}
                     copyInProgress={copyInProgress}
                     moveInProgress={moveInProgress}
-                    handleMoveOrCopy={() => handleMoveOrCopy(item)}
+                    handleCopy={() => handleCopy(item)}
+                    handleMove={() => handleMove(item)}
                     submitNewName={submitNewName}
                   />
                 ) : (
