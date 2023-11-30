@@ -11,15 +11,19 @@ function HomePage() {
   const [items, setItems] = useState([]);
   const [inFolder, setInFolder] = useState(foldername);
 
+  let deleteUrl;
+
   function handleDelete(currItem) {
+    if (inFolder) {
+      deleteUrl = `http://localhost:3007/${username}/${foldername}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
+    } else {
+      deleteUrl = `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
+    }
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
-    fetch(
-      `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`,
-      requestOptions
-    )
+    fetch(deleteUrl, requestOptions)
       .then((response) => {
         if (response.ok) {
           return response.json();

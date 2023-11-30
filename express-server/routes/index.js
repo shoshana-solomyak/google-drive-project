@@ -65,6 +65,11 @@ router.get("/:username/content/:filepath", (req, res, next) => {
   const filepath = `public/files/${req.params.username}/${req.params.filepath}`;
   res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
 });
+router.get("/:username/:foldername/content/:filepath", (req, res, next) => {
+  console.log("in server");
+  const filepath = `public/files/${req.params.username}/${req.params.foldername}/${req.params.filepath}`;
+  res.sendFile(path.join(path.normalize(path.join(__dirname, "..")), filepath));
+});
 
 router.post("/users", function (req, res, next) {
   let input = req.body.inputs;
@@ -113,5 +118,32 @@ router.delete("/:username/:item", function (req, res, next) {
     });
   }
 });
+router.delete("/:username/:foldername/:item", function (req, res, next) {
+  const { username, item, foldername } = req.params;
+  const isFolder = req.query.isFolder === "true";
+  const filePath = `./public/files/${username}/${foldername}/${item}`;
+  console.log("we got here: ", filePath);
+  if (!isFolder) {
+    fs.rm(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to delete item." });
+      } else {
+        res.status(200).json({ message: "Item deleted successfully." });
+      }
+    });
+  } else {
+    fs.rmdir(filePath, (err) => {
+      console.log("filePath: ", filePath);
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to delete item." });
+      } else {
+        res.status(200).json({ message: "Item deleted successfully." });
+      }
+    });
+  }
+});
+router.get("/:username/:foldername");
 
 module.exports = router;
