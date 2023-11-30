@@ -49,7 +49,14 @@ function Folder({
   return (
     <div key={item.id} className="item" style={{ backgroundColor: "red" }}>
       {item.name}
-
+      <button
+        onClick={() => {
+          setInFolder(true);
+          navigate(`./folder/${item.name}`);
+        }}
+      >
+        open
+      </button>
       <button onClick={handleInfo}>info</button>
       {showInfo ? (
         <span>
@@ -68,14 +75,7 @@ function Folder({
           </ul>
         )
       ) : null}
-      <button
-        onClick={() => {
-          setInFolder(true);
-          navigate(`./folder/${item.name}`);
-        }}
-      >
-        open
-      </button>
+
       <button
         onClick={() => handleDelete({ itemName: item.name, isFolder: true })}
       >

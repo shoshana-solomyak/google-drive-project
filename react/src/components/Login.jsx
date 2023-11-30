@@ -1,19 +1,3 @@
-// import {Link} from "react-router-dom";
-// function Login() {
-//   function handleLogin(){
-
-//   }
-//   return (
-//     <>
-//       <input type="text" placeholder="name..." />
-//       <input type="password" placeholder="password..." />
-//       <button onClick={handleLogin}>login</button>
-//     </>
-//   );
-// }
-
-// export default Login;
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

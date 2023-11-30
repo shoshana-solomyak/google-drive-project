@@ -141,15 +141,25 @@ router.delete("/:username/:item", function (req, res, next) {
       }
     });
   } else {
-    fs.rmdir(filePath, (err) => {
-      console.log("filePath: ", filePath);
+    fs.readdir(filePath, (err, files) => {
+      console.log("heloooo: ", filePath);
       if (err) {
         console.error(err);
-        res.status(500).json({ message: "Failed to delete item." });
-        res.send(error);
-        console.log("error: ", error);
+        res.status(500).json({ message: "Failed to read directory." });
       } else {
-        res.status(200).json({ message: "Item deleted successfully." });
+        if (files.length > 0) {
+          res.status(400).json({ message: "Folder is not empty." });
+        } else {
+          fs.rmdir(filePath, (err) => {
+            console.log("filePath: ", filePath);
+            if (err) {
+              console.error(err);
+              res.status(500).json({ message: "Failed to delete folder." });
+            } else {
+              res.status(200).json({ message: "Folder deleted successfully." });
+            }
+          });
+        }
       }
     });
   }
@@ -169,13 +179,25 @@ router.delete("/:username/:foldername/:item", function (req, res, next) {
       }
     });
   } else {
-    fs.rmdir(filePath, (err) => {
-      console.log("filePath: ", filePath);
+    fs.readdir(filePath, (err, files) => {
+      console.log("heloooo: ", filePath);
       if (err) {
         console.error(err);
-        res.status(500).json({ message: "Failed to delete item." });
+        res.status(500).json({ message: "Failed to read directory." });
       } else {
-        res.status(200).json({ message: "Item deleted successfully." });
+        if (files.length > 0) {
+          res.status(400).json({ message: "Folder is not empty." });
+        } else {
+          fs.rmdir(filePath, (err) => {
+            console.log("filePath: ", filePath);
+            if (err) {
+              console.error(err);
+              res.status(500).json({ message: "Failed to delete folder." });
+            } else {
+              res.status(200).json({ message: "Folder deleted successfully." });
+            }
+          });
+        }
       }
     });
   }

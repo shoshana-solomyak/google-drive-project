@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function Error({ message }) {
+function ErrorPage({ message }) {
   const navigate = useNavigate();
   return (
     <>
@@ -18,4 +18,4 @@ function Error({ message }) {
   );
 }
 
-export default Error;
+export default ErrorPage;

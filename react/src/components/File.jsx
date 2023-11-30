@@ -33,6 +33,11 @@ function File({
 
       <button onClick={openFile}>open</button>
       <button onClick={handleInfo}>info</button>
+      {showInfo ? (
+        <span>
+          size: {item.size}, birthday: {item.birthday}
+        </span>
+      ) : null}
       <button
         onClick={() => handleDelete({ itemName: item.name, isFolder: false })}
       >
@@ -58,12 +63,6 @@ function File({
       )}
       <button onClick={handleCopy}>copy</button>
       <button onClick={handleMove}>move</button>
-
-      {showInfo ? (
-        <span>
-          size: {item.size}, birthday: {item.birthday}
-        </span>
-      ) : null}
     </div>
   );
 }

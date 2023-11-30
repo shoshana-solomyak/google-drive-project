@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Error from "./Error";
+import ErrorPage from "./ErrorPage";
 
 function FilePage() {
   const params = useParams();
@@ -42,7 +42,7 @@ function FilePage() {
   return (
     <>
       {error ? (
-        <Error message={error} />
+        <ErrorPage message={error} />
       ) : (
         <div dangerouslySetInnerHTML={{ __html: content }} />
       )}

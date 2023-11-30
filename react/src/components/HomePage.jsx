@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Folder from "./Folder";
 import File from "./File";
 import { useNavigate } from "react-router-dom";
-import Error from "./Error";
+import ErrorPage from "./ErrorPage";
 function HomePage() {
   const params = useParams();
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ function HomePage() {
   const [error, setError] = useState(null);
   const [copyInProgress, setCopyInProgress] = useState(null);
   const [moveInProgress, setMoveInProgress] = useState(null);
-  let deleteUrl;
 
   useEffect(() => {
     if (!user) {
@@ -121,22 +120,61 @@ function HomePage() {
       });
   }
 
+  // function handleDelete(currItem) {
+  //   if (inFolder) {
+  //     deleteUrl = `http://localhost:3007/${username}/${foldername}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
+  //   } else {
+  //     deleteUrl = `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
+  //   }
+  //   const requestOptions = {
+  //     method: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //   };
+  //   fetch(deleteUrl, requestOptions)
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         return response.json();
+  //       }
+  //     })
+  //     .then(() => {
+  //       setItems((prevItems) =>
+  //         prevItems.filter((item) => item.name !== currItem.itemName)
+  //       );
+  //       console.log("deleted");
+  //     })
+  //     else {
+  //       return response.json().then((data) => {
+  //         alert(data.message);
+  //       });
+  //     }
+  //     .catch((error) => {
+  //       console.log("error: ", error);
+  //       alert("Error deleting item:" + error.message);
+  //     });
+  // }
+
   function handleDelete(currItem) {
+    let deleteUrl;
+
     if (inFolder) {
       deleteUrl = `http://localhost:3007/${username}/${foldername}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
     } else {
       deleteUrl = `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
     }
+
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     };
+
     fetch(deleteUrl, requestOptions)
       .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("the folder isnt empty");
+          return response.json().then((data) => {
+            throw new Error(data.message);
+          });
         }
       })
       .then(() => {
@@ -146,7 +184,9 @@ function HomePage() {
         console.log("deleted");
       })
       .catch((error) => {
-        alert("Error deleting item:", error.message);
+        console.error("Error deleting item:", error);
+
+        alert("Error deleting item: " + error.message);
       });
   }
 
@@ -163,7 +203,7 @@ function HomePage() {
   return (
     <>
       {error ? (
-        <Error message={error} />
+        <ErrorPage message={error} />
       ) : (
         <div>
           {inFolder ? (

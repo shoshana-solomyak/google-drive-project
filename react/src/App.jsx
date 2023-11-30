@@ -3,7 +3,7 @@ import "./App.css";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import FilePage from "./components/FilePage";
-import Error from "./components/Error";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   return (
@@ -20,7 +20,10 @@ function App() {
               element={<FilePage />}
             />
           </Route>
-          <Route path="*" element={<Error message={"404 page not found"} />} />
+          <Route
+            path="*"
+            element={<ErrorPage message={"404 page not found"} />}
+          />
         </Routes>
       </BrowserRouter>
     </>
