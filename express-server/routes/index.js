@@ -151,6 +151,41 @@ router.delete("/:username/:foldername/:item", function (req, res, next) {
     });
   }
 });
-router.get("/:username/:foldername");
+// router.get("/:username/:foldername");
+router.put("/:username/:item", function (req, res) {
+  const { username, item } = req.params;
+  const newItem = req.body.name;
+  console.log(" newItem: ", newItem);
+  let oldPath = `./public/files/${username}/${item}`;
+  let newPath = `./public/files/${username}/${newItem}`;
+
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) {
+      console.error("Error renaming file:", err);
+      res.status(500).send("Error renaming file");
+      return;
+    }
+    console.log("File renamed successfully!");
+    res.status(200).send("File renamed successfully");
+  });
+});
+
+router.put("/:username/:foldername/:item", function (req, res) {
+  const { username, item, foldername } = req.params;
+  const newItem = req.body.name;
+  console.log(" newItem: ", newItem);
+  let oldPath = `./public/files/${username}/${foldername}/${item}`;
+  let newPath = `./public/files/${username}/${foldername}/${newItem}`;
+
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) {
+      console.error("Error renaming file:", err);
+      res.status(500).send("Error renaming file");
+      return;
+    }
+    console.log("File renamed successfully!");
+    res.status(200).send("File renamed successfully");
+  });
+});
 
 module.exports = router;

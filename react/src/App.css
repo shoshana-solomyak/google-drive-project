@@ -44,4 +44,8 @@
 width:fit-content;
 height:fit-content;
 margin:50px;
-padding: 20px;}
+padding: 30px;
+display: flex;
+flex-direction: column;}
+button{margin: 5px;}
+#flexContainer{display: flex;}

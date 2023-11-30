@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function File({ item, handleDelete }) {
+function File({
+  item,
+  handleDelete,
+
+  submitNewName,
+}) {
   const navigate = useNavigate();
   const splitName = item.name.split(".");
   const [showInfo, setShowInfo] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [showRename, setShowRename] = useState(false);
+  function handleRename(itemName) {
+    setShowRename(!showRename);
 
+    console.log("item name:", itemName);
+  }
   function handleInfo() {
     setShowInfo((info) => !info);
   }
@@ -25,7 +36,24 @@ function File({ item, handleDelete }) {
       >
         🗑️
       </button>
-      <button>✏️</button>
+      <button onClick={() => handleRename(item.name)}>✏️</button>
+      {showRename && (
+        <>
+          <input
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="enter new name"
+          ></input>
+          <button
+            onClick={() => {
+              submitNewName(item.name, newName);
+              console.log("newName: ", newName);
+              console.log("item.name:", item.name);
+            }}
+          >
+            change
+          </button>
+        </>
+      )}
       {showInfo ? (
         <span>
           size: {item.size}, birthday: {item.birthday}
