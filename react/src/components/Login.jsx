@@ -1,19 +1,3 @@
-// import {Link} from "react-router-dom";
-// function Login() {
-//   function handleLogin(){
-
-//   }
-//   return (
-//     <>
-//       <input type="text" placeholder="name..." />
-//       <input type="password" placeholder="password..." />
-//       <button onClick={handleLogin}>login</button>
-//     </>
-//   );
-// }
-
-// export default Login;
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,10 +5,14 @@ function Login() {
   const [inputs, setInputs] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  localStorage.removeItem("currentUser");
+
   function handleChange(e) {
     const { name, value } = e.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
   }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!inputs.username || !inputs.password) {
@@ -38,9 +26,9 @@ function Login() {
       },
       body: JSON.stringify({ inputs }),
     })
-      // .then(() => console.log("inputs: ", inputs))
       .then((res) => {
         if (!res.ok) {
+          setErrorMessage("incorrect username or password");
           throw new Error("incorrect username or password");
         } else {
           console.log("yay");

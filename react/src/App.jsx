@@ -3,7 +3,7 @@ import "./App.css";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
 import FilePage from "./components/FilePage";
-import Error from "./components/Error";
+import Error from "./components/ErrorPage";
 
 function App() {
   return (
