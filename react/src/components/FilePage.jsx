@@ -19,6 +19,7 @@ function FilePage() {
     }
 
     const fileName = `${params.filename}.${searchParams.get("type")}`;
+    console.log("fileName: ", fileName);
     const href = window.location.href;
     let url;
     if (href.includes("/folder/")) {

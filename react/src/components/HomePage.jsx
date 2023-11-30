@@ -16,8 +16,6 @@ function HomePage() {
   const [copyInProgress, setCopyInProgress] = useState(null);
   const [moveInProgress, setMoveInProgress] = useState(null);
   const user = JSON.parse(localStorage.getItem("currentUser"));
-  let deleteUrl;
-
   useEffect(() => {
     //check if correct user is logged in
     if (!user) {
@@ -168,39 +166,6 @@ function HomePage() {
         console.error("Error updating name:", error);
       });
   }
-
-  // function handleDelete(currItem) {
-  //   if (inFolder) {
-  //     deleteUrl = `http://localhost:3007/${username}/${foldername}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
-  //   } else {
-  //     deleteUrl = `http://localhost:3007/${username}/${currItem.itemName}?isFolder=${currItem.isFolder}`;
-  //   }
-  //   const requestOptions = {
-  //     method: "DELETE",
-  //     headers: { "Content-Type": "application/json" },
-  //   };
-  //   fetch(deleteUrl, requestOptions)
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       }
-  //     })
-  //     .then(() => {
-  //       setItems((prevItems) =>
-  //         prevItems.filter((item) => item.name !== currItem.itemName)
-  //       );
-  //       console.log("deleted");
-  //     })
-  //     else {
-  //       return response.json().then((data) => {
-  //         alert(data.message);
-  //       });
-  //     }
-  //     .catch((error) => {
-  //       console.log("error: ", error);
-  //       alert("Error deleting item:" + error.message);
-  //     });
-  // }
 
   function handleDelete(currItem) {
     let deleteUrl;

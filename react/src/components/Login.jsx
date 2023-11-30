@@ -37,7 +37,6 @@ function Login() {
       })
       .then((data) => {
         localStorage.setItem("currentUser", JSON.stringify(data));
-        console.log(data);
         navigate(`/${data.name}`);
       })
       .catch((error) => {

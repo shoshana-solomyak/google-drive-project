@@ -7,11 +7,11 @@ function File({ item, handleDelete, handleCopy, handleMove, submitNewName }) {
   const [showInfo, setShowInfo] = useState(false);
   const [newName, setNewName] = useState("");
   const [showRename, setShowRename] = useState(false);
-  function handleRename(itemName) {
-    setShowRename(!showRename);
 
-    console.log("item name:", itemName);
+  function handleRename() {
+    setShowRename(!showRename);
   }
+
   function handleInfo() {
     setShowInfo((info) => !info);
   }
@@ -24,7 +24,7 @@ function File({ item, handleDelete, handleCopy, handleMove, submitNewName }) {
 
   return (
     <div key={item.id} className="item" style={{ backgroundColor: "blue" }}>
-      {item.name}
+      <strong style={{ color: "white", fontSize: "1.5em" }}>{item.name}</strong>
 
       <button onClick={openFile}>open</button>
       <button onClick={handleInfo}>info</button>
@@ -48,8 +48,6 @@ function File({ item, handleDelete, handleCopy, handleMove, submitNewName }) {
           <button
             onClick={() => {
               submitNewName(item.name, newName);
-              console.log("newName: ", newName);
-              console.log("item.name:", item.name);
             }}
           >
             change

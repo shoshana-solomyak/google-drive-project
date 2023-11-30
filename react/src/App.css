@@ -40,12 +40,22 @@
 .read-the-docs {
   color: #888;
 }
-.item{background-color: rgb(20, 82, 215);
-width:fit-content;
-height:fit-content;
-margin:50px;
-padding: 30px;
-display: flex;
-flex-direction: column;}
-button{margin: 5px;}
-#flexContainer{display: flex;}
+.item {
+  background-color: rgb(20, 82, 215);
+  width: fit-content;
+  height: fit-content;
+  margin: 50px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+button {
+  margin: 5px;
+}
+#flexContainer {
+  display: flex;
+}
+
+button {
+  display: inline;
+}

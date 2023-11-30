@@ -19,10 +19,8 @@ function Folder({
   const [showInfo, setShowInfo] = useState(false);
   const [newName, setNewName] = useState("");
   const [showRename, setShowRename] = useState(false);
-  function handleRename(itemName) {
+  function handleRename() {
     setShowRename(!showRename);
-
-    console.log("item name:", itemName);
   }
   function handleInfo() {
     setShowInfo((info) => !info);
@@ -36,11 +34,8 @@ function Folder({
         return res.json();
       })
       .then((res) => {
-        console.log("Fetched data:", res);
         setView(res);
         setShowView(!showView);
-
-        console.log("showView: ", showView);
       })
       .catch((err) => {
         console.log("Fetch error:", err);
@@ -49,7 +44,8 @@ function Folder({
 
   return (
     <div key={item.id} className="item" style={{ backgroundColor: "red" }}>
-      {item.name}
+      <strong style={{ color: "white", fontSize: "1.5em" }}>{item.name}</strong>
+
       <button
         onClick={() => {
           setInFolder(true);
@@ -92,8 +88,6 @@ function Folder({
           <button
             onClick={() => {
               submitNewName(item.name, newName);
-              console.log("newName: ", newName);
-              console.log("item.name:", item.name);
             }}
           >
             change
