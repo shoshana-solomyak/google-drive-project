@@ -100,8 +100,26 @@ function Folder({
           </button>
         </>
       )}
-      {copyInProgress ? <button onClick={handleCopy}>select</button> : null}
-      {moveInProgress ? <button onClick={handleMove}>select</button> : null}
+      {copyInProgress ? (
+        <button
+          onClick={() => {
+            handleCopy();
+            setShowView(false);
+          }}
+        >
+          select
+        </button>
+      ) : null}
+      {moveInProgress ? (
+        <button
+          onClick={() => {
+            handleMove();
+            setShowView(false);
+          }}
+        >
+          select
+        </button>
+      ) : null}
     </div>
   );
 }
